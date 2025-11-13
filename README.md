@@ -5,36 +5,15 @@
 
 
 
-A complete data acquisition system for monitoring engine parameters in real-time:
+complete data acquisition system for monitoring engine parameters in real-time:
 - **Coolant Temperature** - NTC thermistor sensor
 - **Oil Temperature** - NTC thermistor sensor  
 - **Oil Pressure** - 0-150 PSI pressure sender
 - **Throttle Position** - Variable resistor (potentiometer)
 
-**Sample Rate:** 10 Hz (configurable)  
-**Data Output:** CSV logging + real-time web dashboard  
-**Communication:** Serial USB (115200 baud)
-
-## System Architecture
-
-```
-┌──────────────┐       USB Serial      ┌──────────────┐      WebSocket     ┌──────────────┐
-│   Arduino    │ ───────────────────► │   Python     │ ───────────────► │   Browser    │
-│   Uno/Nano   │    115200 baud       │   Backend    │   Socket.IO      │   Dashboard  │
-│              │                       │  (Flask)     │                   │              │
-│  - ADC Read  │                       │              │                   │  - Gauges    │
-│  - Filtering │                       │  - Parsing   │                   │  - Charts    │
-│  - CSV Out   │                       │  - Logging   │                   │  - Logging   │
-└──────────────┘                       └──────────────┘                   └──────────────┘
-      ↑                                                                            
-  Sensors:                                                                        
-  - Coolant Temp (A0)                                                             
-  - Oil Temp (A1)                                                                 
-  - Oil Pressure (A2)                                                             
-  - Throttle (A3)                                                                 
-```
-
-## features
+**sample rate:** 10 Hz (configurable)  
+**data output:** CSV logging + real-time web dashboard  
+**communication:** Serial USB (115200 baud)
 
 ### arduino
 -  Object-oriented sensor classes
@@ -75,78 +54,31 @@ A complete data acquisition system for monitoring engine parameters in real-time
 
 ```
 Arduino Pin Assignments:
-┌─────────────────────────────────────┐
-│ A0 → Coolant Temp Sensor            │
-│ A1 → Oil Temp Sensor                │
-│ A2 → Oil Pressure Sensor            │
-│ A3 → Throttle Position Sensor       │
-│ 5V → Sensor Power                   │
-│ GND → Sensor Ground                 │
-│ USB → Computer/Raspberry Pi         │
-└─────────────────────────────────────┘
+
+ A0 → Coolant Temp Sensor            
+ A1 → Oil Temp Sensor                
+ A2 → Oil Pressure Sensor            
+ A3 → Throttle Position Sensor       
+ 5V → Sensor Power                   
+ GND → Sensor Ground                 
+ USB → Computer/Raspberry Pi         
+
 
 Sensor Connections:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 Temperature (NTC Thermistor):
-  5V ─┬─ 2.2kΩ ─┬─ Thermistor ─ GND
-      │         └─ ADC Pin (A0/A1)
-      └─ 0.1µF capacitor ─ GND
+  5V  2.2kΩ  Thermistor  GND
+                ADC Pin (A0/A1)
+       0.1µF capacitor  GND
 
 Pressure Sender:
-  5V ─ Sensor+ (signal) ─ ADC Pin (A2)
-  GND ─ Sensor-
+  5V  Sensor+ (signal)  ADC Pin (A2)
+  GND  Sensor-
 
 Throttle Position:
-  5V ─ TPS+ (high)
-  Signal ─ ADC Pin (A3)
-  GND ─ TPS- (low)
-```
-
-
-
-### arduino firmware
-
-```bash
-# Install PlatformIO (recommended) or Arduino IDE
-pip install platformio
-
-# Upload firmware
-cd firmware
-pio run --target upload
-
-# Monitor serial output
-pio device monitor
-```
-
-**Or using Arduino IDE:**
-1. Open `firmware/src/main.cpp`
-2. Select board: Tools → Board → Arduino Uno
-3. Select port: Tools → Port → (your Arduino port)
-4. Upload: Sketch → Upload
-
-### 2. Python Backend
-
-```bash
-# Create virtual environment
-python3 -m venv venv
-source venv/bin/activate  # On macOS/Linux
-# venv\Scripts\activate   # On Windows
-
-# Install dependencies
-cd backend
-pip install -r requirements.txt
-
-# Run server
-python app.py
-```
-
-Backend will start on `http://localhost:5000`
-
-### 3. Access Dashboard
-
-Open browser and navigate to:
-```
-http://localhost:5000
+  5V  TPS+ (high)
+  Signal  ADC Pin (A3)
+  GND  TPS- (low)
 ```
 
 
@@ -159,14 +91,13 @@ http://localhost:5000
 5. **Click "Start"** - Begin streaming data at 10Hz
 6. **Click "Start Logging"** - Save data to CSV (optional)
 
-### Data Logging
 
-Logged data is saved to `data/logs/` with format:
+data is saved to `data/logs/` with format:
 ```
 session_name_YYYYMMDD_HHMMSS.csv
 ```
 
-CSV Format:
+csv format:
 ```csv
 timestamp,coolant_temp,oil_temp,oil_pressure,throttle_position
 0.100,85.4,92.1,45.2,12.5
@@ -210,46 +141,6 @@ SERIAL_PORT = '/dev/ttyUSB0'  # Linux
 # SERIAL_PORT = 'COM3'        # Windows
 # SERIAL_PORT = '/dev/cu.usbserial-*'  # macOS
 ```
-
-
-
-```
-miatainterfacer/
-├── firmware/               # Arduino C++ code
-│   ├── src/
-│   │   ├── main.cpp       # Main program loop
-│   │   ├── sensors.h      # Sensor class definitions
-│   │   ├── sensors.cpp    # Sensor implementations
-│   │   ├── config.h       # Pin & system config
-│   │   └── calibration.h  # Sensor calibration curves
-│   └── platformio.ini     # PlatformIO config
-│
-├── backend/               # Python Flask server
-│   ├── app.py            # Main Flask application
-│   ├── serial_handler.py # Serial communication & threading
-│   ├── data_logger.py    # CSV logging functionality
-│   ├── config.py         # Backend configuration
-│   └── requirements.txt  # Python dependencies
-│
-├── frontend/             # Web dashboard
-│   ├── templates/
-│   │   └── index.html   # Dashboard HTML
-│   └── static/
-│       ├── css/
-│       │   └── style.css      # Dashboard styling
-│       └── js/
-│           ├── dashboard.js   # UI logic & controls
-│           └── chart.js       # Chart.js graphs
-│
-├── data/
-│   └── logs/            # CSV log files (created at runtime)
-│
-├── docs/                # Documentation & images
-│
-└── tests/              # Unit tests
-```
-
-
 
 ### install
 **power** - USB power from 12V→5V USB adapter (cig lighter will do)

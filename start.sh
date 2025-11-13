@@ -8,11 +8,11 @@ echo ""
 
 # Check Python installation
 if ! command -v python3 &> /dev/null; then
-    echo "❌ Python 3 not found. Please install Python 3.8+"
+    echo "[ERROR] Python 3 not found. Please install Python 3.8+"
     exit 1
 fi
 
-echo "✓ Python 3 found"
+echo "[OK] Python 3 found"
 
 # Check virtual environment
 if [ ! -d "venv" ]; then
@@ -35,11 +35,11 @@ python3 -c "
 import serial.tools.list_ports
 ports = list(serial.tools.list_ports.comports())
 if ports:
-    print('✓ Found serial ports:')
+    print('[OK] Found serial ports:')
     for port in ports:
         print(f'  - {port.device}: {port.description}')
 else:
-    print('⚠ No serial ports detected. Connect Arduino and try again.')
+    print('[WARNING] No serial ports detected. Connect Arduino and try again.')
 "
 
 echo ""

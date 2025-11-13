@@ -82,15 +82,15 @@ def calibrate_temperature():
             voltage = float(input(f"Enter measured voltage (0-5V): "))
             
             if voltage < 0 or voltage > 5:
-                print("⚠ Warning: Voltage out of range!")
+                print("[WARNING] Warning: Voltage out of range!")
             
             actual_temp = float(input(f"Enter actual temperature (°C) [{temp}]: ") or temp)
             
             calibration_points.append((voltage, actual_temp))
-            print(f"✓ Recorded: {voltage:.3f}V = {actual_temp:.1f}°C")
+            print(f"[OK] Recorded: {voltage:.3f}V = {actual_temp:.1f}°C")
             
         except ValueError:
-            print("✗ Invalid input, skipping...")
+            print("[ERROR] Invalid input, skipping...")
     
     print("\n" + "="*60)
     print("CALIBRATION RESULTS - Add to calibration.h:")
@@ -130,15 +130,15 @@ def calibrate_pressure():
             voltage = float(input(f"Enter measured voltage (0-5V): "))
             
             if voltage < 0 or voltage > 5:
-                print("⚠ Warning: Voltage out of range!")
+                print("[WARNING] Warning: Voltage out of range!")
             
             actual_psi = float(input(f"Enter actual pressure (PSI) [{psi}]: ") or psi)
             
             calibration_points.append((voltage, actual_psi))
-            print(f"✓ Recorded: {voltage:.3f}V = {actual_psi:.1f} PSI")
+            print(f"[OK] Recorded: {voltage:.3f}V = {actual_psi:.1f} PSI")
             
         except ValueError:
-            print("✗ Invalid input, skipping...")
+            print("[ERROR] Invalid input, skipping...")
     
     print("\n" + "="*60)
     print("CALIBRATION RESULTS - Add to calibration.h:")
@@ -162,11 +162,11 @@ def calibrate_tps():
     
     input("\nPress ENTER when throttle is FULLY CLOSED...")
     min_voltage = float(input("Enter measured voltage (0-5V): "))
-    print(f"✓ Min voltage: {min_voltage:.3f}V")
+    print(f"[OK] Min voltage: {min_voltage:.3f}V")
     
     input("\nPress ENTER when throttle is WIDE OPEN (WOT)...")
     max_voltage = float(input("Enter measured voltage (0-5V): "))
-    print(f"✓ Max voltage: {max_voltage:.3f}V")
+    print(f"[OK] Max voltage: {max_voltage:.3f}V")
     
     print("\n" + "="*60)
     print("CALIBRATION RESULTS - Add to calibration.h:")

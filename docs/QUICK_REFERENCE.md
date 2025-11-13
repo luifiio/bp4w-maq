@@ -1,6 +1,6 @@
 # Quick Reference Guide
 
-## 🚀 Quick Start (1-2-3)
+##  Quick Start (1-2-3)
 
 ```bash
 # 1. Upload firmware to Arduino
@@ -13,7 +13,7 @@ cd firmware && pio run --target upload
 http://localhost:5000
 ```
 
-## 📌 Pin Assignments
+##  Pin Assignments
 
 | Pin | Sensor | Range | Notes |
 |-----|--------|-------|-------|
@@ -22,7 +22,7 @@ http://localhost:5000
 | A2 | Oil Pressure | 0.5-4.5V | 0-150 PSI sender |
 | A3 | Throttle Position | 0.5-4.5V | TPS potentiometer |
 
-## ⚙️ Configuration Quick Changes
+##  Configuration Quick Changes
 
 ### Change Sample Rate
 File: `firmware/src/config.h`
@@ -46,7 +46,7 @@ ALERT_OIL_TEMP = 120.0         # °C
 ALERT_OIL_PRESSURE_MIN = 15.0  # PSI
 ```
 
-## 🔧 Common Commands
+##  Common Commands
 
 ### Arduino Development
 ```bash
@@ -81,7 +81,7 @@ FLASK_ENV=development python backend/app.py
 python tools/calibrate.py
 ```
 
-## 📊 Data Format
+##  Data Format
 
 ### Serial Output (Arduino → Python)
 ```csv
@@ -106,7 +106,7 @@ Format: Same as serial output with header row
 }
 ```
 
-## 🐛 Troubleshooting Checklist
+##  Troubleshooting Checklist
 
 ### Arduino Not Detected
 - [ ] USB cable plugged in?
@@ -145,7 +145,7 @@ Format: Same as serial output with header row
 - [ ] Try http://127.0.0.1:5000
 - [ ] Check backend console for errors
 
-## 📏 Typical Readings (1998 MX5)
+##  Typical Readings (1998 MX5)
 
 ### Normal Operating Conditions
 | Parameter | Normal Range | Warning | Critical |
@@ -166,7 +166,7 @@ Format: Same as serial output with header row
 - Oil: 100-115°C
 - Pressure: 35-50 PSI (hot, high RPM)
 
-## 🛠️ Hardware Tips
+##  Hardware Tips
 
 ### Signal Noise Reduction
 1. Add 0.1µF capacitor between ADC pin and GND
@@ -177,8 +177,8 @@ Format: Same as serial output with header row
 
 ### Voltage Division (if sensor > 5V)
 ```
-Vin ──┬── R1 ──┬── ADC Pin
-      │        │
+Vin  R1  ADC Pin
+              
      Sensor   R2
              GND
 
@@ -195,7 +195,7 @@ Example: 12V → 5V
 - Total current: <100mA (plenty of headroom)
 - Car install: 12V→5V USB adapter (2A recommended)
 
-## 🎯 Performance Specs
+##  Performance Specs
 
 | Metric | Value | Notes |
 |--------|-------|-------|
@@ -207,7 +207,7 @@ Example: 12V → 5V
 | Data Retention | Unlimited | CSV files |
 | WebSocket Overhead | <5 KB/s | Minimal bandwidth |
 
-## 📱 Access from Phone/Tablet
+##  Access from Phone/Tablet
 
 ### Same Network
 Find computer's IP address:
@@ -227,15 +227,15 @@ Access from phone: `http://192.168.1.xxx:5000`
 3. Access from phone browser
 4. Pin to home screen for quick access
 
-## 🔒 Safety Reminders
+##  Safety Reminders
 
-- ⚠️ **NOT a safety-critical system** - For data logging only
-- ⚠️ **Do not rely on readings while driving** - Keep eyes on road
-- ⚠️ **Secure all wiring** - Prevent interference with pedals/steering
-- ⚠️ **Test thoroughly** before track use
-- ⚠️ **Always have backup gauges** - Don't remove OEM sensors
+-  **NOT a safety-critical system** - For data logging only
+-  **Do not rely on readings while driving** - Keep eyes on road
+-  **Secure all wiring** - Prevent interference with pedals/steering
+-  **Test thoroughly** before track use
+-  **Always have backup gauges** - Don't remove OEM sensors
 
-## 📚 Additional Resources
+##  Additional Resources
 
 ### Documentation
 - [README.md](../README.md) - Full documentation

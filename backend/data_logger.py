@@ -36,7 +36,7 @@ class DataLogger:
         ])
         
         self.is_logging = True
-        print(f"✓ logging to: {filepath}")
+        print(f"[OK] logging to: {filepath}")
         
     def stop_logging(self):
         """stop logging and close file"""
@@ -49,7 +49,7 @@ class DataLogger:
             self.csv_writer = None
         
         self.is_logging = False
-        print("✓ logging stopped")
+        print("[OK] logging stopped")
     
     def log_data(self, data):
         """Write data to CSV"""

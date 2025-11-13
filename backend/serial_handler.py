@@ -39,10 +39,10 @@ class SerialHandler:
                 timeout=1.0
             )
             time.sleep(2)  # Arduino reset delay
-            print(f"✓ Connected to {self.port}")
+            print(f"[OK] Connected to {self.port}")
             return True
         except serial.SerialException as e:
-            print(f"✗ Connection failed: {e}")
+            print(f"[ERROR] Connection failed: {e}")
             return False
     
     def disconnect(self):
@@ -50,7 +50,7 @@ class SerialHandler:
         self.stop_streaming()
         if self.serial_conn and self.serial_conn.is_open:
             self.serial_conn.close()
-            print("✓ Disconnected")
+            print("[OK] Disconnected")
     
     def start_streaming(self, callback: Callable[[SensorData], None]):
         """start streaming data in background thread"""
@@ -61,7 +61,7 @@ class SerialHandler:
         self.is_running.set()
         self.thread = Thread(target=self._stream_loop, daemon=True)
         self.thread.start()
-        print("✓ Streaming started")
+        print("[OK] Streaming started")
     
     def stop_streaming(self):
         """stop streaming data"""
@@ -69,7 +69,7 @@ class SerialHandler:
             self.is_running.clear()
             if self.thread:
                 self.thread.join(timeout=2)
-            print("✓ Streaming stopped")
+            print("[OK] Streaming stopped")
     
     def _stream_loop(self):
         """Background thread for reading serial data"""
@@ -89,33 +89,33 @@ class SerialHandler:
                                 consecutive_errors = 0  # Reset error count on success
                 else:
                     # Connection lost, attempt reconnect
-                    print("⚠ Connection lost, attempting reconnection...")
+                    print("[WARNING] Connection lost, attempting reconnection...")
                     consecutive_errors += 1
                     if consecutive_errors < max_errors:
                         time.sleep(2)
                         if self.connect():
-                            print("✓ Reconnected successfully")
+                            print("[OK] Reconnected successfully")
                             consecutive_errors = 0
                     else:
-                        print("✗ Max reconnection attempts reached")
+                        print("[ERROR] Max reconnection attempts reached")
                         self.is_running.clear()
                             
             except (UnicodeDecodeError, ValueError) as e:
-                print(f"⚠ Data parsing error: {e}")
+                print(f"[WARNING] Data parsing error: {e}")
                 time.sleep(0.1)
             except serial.SerialException as e:
-                print(f"✗ Serial error: {e}")
+                print(f"[ERROR] Serial error: {e}")
                 consecutive_errors += 1
                 if consecutive_errors < max_errors:
                     time.sleep(2)
                     try:
                         if self.connect():
-                            print("✓ Reconnected after error")
+                            print("[OK] Reconnected after error")
                             consecutive_errors = 0
                     except:
                         pass
                 else:
-                    print("✗ Too many errors, stopping stream")
+                    print("[ERROR] Too many errors, stopping stream")
                     self.is_running.clear()
     
     def _parse_line(self, line: str) -> Optional[SensorData]:
