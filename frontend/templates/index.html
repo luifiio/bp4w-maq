@@ -53,18 +53,21 @@
             </div>
         </section>
 
-        <!-- Charts -->
+        <!-- Charts with Tabs -->
         <section class="charts">
-            <div class="chart-container">
-                <h2>Temperature</h2>
+            <div class="chart-tabs">
+                <button class="chart-tab active" data-chart="temp">Temperature</button>
+                <button class="chart-tab" data-chart="pressure">Oil Pressure</button>
+                <button class="chart-tab" data-chart="throttle">Throttle</button>
+            </div>
+            
+            <div class="chart-container active" data-chart-content="temp">
                 <canvas id="tempChart"></canvas>
             </div>
-            <div class="chart-container">
-                <h2>Oil Pressure</h2>
+            <div class="chart-container" data-chart-content="pressure">
                 <canvas id="pressureChart"></canvas>
             </div>
-            <div class="chart-container">
-                <h2>Throttle Position</h2>
+            <div class="chart-container" data-chart-content="throttle">
                 <canvas id="throttleChart"></canvas>
             </div>
         </section>

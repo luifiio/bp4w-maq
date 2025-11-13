@@ -203,15 +203,48 @@ button.active {
     margin-bottom: 48px;
 }
 
-.chart-container {
-    background: #fafafa;
-    border: 1px solid #e5e5e5;
-    padding: 32px;
-    margin-bottom: 32px;
+.chart-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 0;
+    border-bottom: 1px solid #e5e5e5;
 }
 
-.chart-container:last-child {
-    margin-bottom: 0;
+.chart-tab {
+    background: transparent;
+    border: none;
+    padding: 16px 32px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: #999;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-bottom: 2px solid transparent;
+}
+
+.chart-tab:hover:not(.active) {
+    color: #666;
+    background: #fafafa;
+}
+
+.chart-tab.active {
+    color: #1a1a1a;
+    border-bottom-color: #1a1a1a;
+    background: transparent;
+}
+
+.chart-container {
+    display: none;
+    background: #fafafa;
+    border: 1px solid #e5e5e5;
+    border-top: none;
+    padding: 32px;
+}
+
+.chart-container.active {
+    display: block;
 }
 
 canvas {

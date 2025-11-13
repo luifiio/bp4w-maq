@@ -26,8 +26,29 @@ window.addEventListener('load', () => {
     console.log('Window loaded event fired');
     addLog('Dashboard loaded', 'info');
     updateButtonStates();
+    initChartTabs();
     console.log('Initialization complete');
 });
+
+// Chart tab switching
+function initChartTabs() {
+    const tabs = document.querySelectorAll('.chart-tab');
+    const containers = document.querySelectorAll('.chart-container');
+    
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const chartType = tab.getAttribute('data-chart');
+            
+            // Update active tab
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            
+            // Update active chart container
+            containers.forEach(c => c.classList.remove('active'));
+            document.querySelector(`[data-chart-content="${chartType}"]`).classList.add('active');
+        });
+    });
+}
 
 // Socket events
 socket.on('connect', () => {
