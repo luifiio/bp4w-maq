@@ -1,8 +1,11 @@
 // WebSocket connection
+console.log('=== Dashboard.js loading ===');
 const socket = io();
+console.log('Socket.IO initialized');
 
 // DOM elements
 const connectBtn = document.getElementById('connectBtn');
+console.log('connectBtn:', connectBtn);
 const startBtn = document.getElementById('startBtn');
 const stopBtn = document.getElementById('stopBtn');
 const logBtn = document.getElementById('logBtn');
@@ -20,33 +23,46 @@ let systemStatus = {
 
 // Initialize
 window.addEventListener('load', () => {
+    console.log('Window loaded event fired');
     addLog('Dashboard loaded', 'info');
     updateButtonStates();
+    console.log('Initialization complete');
 });
 
 // Socket events
 socket.on('connect', () => {
+    console.log('Socket connected!');
     addLog('WebSocket connected', 'success');
 });
 
 socket.on('disconnect', () => {
+    console.log('Socket disconnected!');
     addLog('WebSocket disconnected', 'error');
 });
 
 socket.on('status', (status) => {
+    console.log('Status received:', status);
     systemStatus = status;
     updateUI();
 });
 
 socket.on('sensor_data', (data) => {
+    console.log('Sensor data received:', data);
     updateGauges(data);
     updateCharts(data);
 });
 
+// Debug: catch all events
+socket.onAny((eventName, ...args) => {
+    console.log(`[Socket Event] ${eventName}:`, args);
+});
+
 // Button handlers
 connectBtn.addEventListener('click', async () => {
+    console.log('Connect button clicked, current status:', systemStatus.connected);
     if (!systemStatus.connected) {
-        await apiCall('/api/connect', 'POST');
+        const result = await apiCall('/api/connect', 'POST');
+        console.log('Connect result:', result);
         addLog('Connecting to serial port...', 'info');
     } else {
         await apiCall('/api/disconnect', 'POST');
@@ -55,10 +71,17 @@ connectBtn.addEventListener('click', async () => {
 });
 
 startBtn.addEventListener('click', async () => {
-    await apiCall('/api/start', 'POST');
-    addLog('Starting data acquisition...', 'success');
-    systemStatus.streaming = true;
-    updateButtonStates();
+    console.log('Start button clicked');
+    const result = await apiCall('/api/start', 'POST');
+    console.log('Start result:', result);
+    if (result && result.success) {
+        addLog('Starting data acquisition...', 'success');
+        systemStatus.streaming = true;
+        updateButtonStates();
+        console.log('Streaming started, systemStatus:', systemStatus);
+    } else {
+        addLog(result?.message || 'Failed to start - please connect first', 'error');
+    }
 });
 
 stopBtn.addEventListener('click', async () => {
@@ -91,27 +114,27 @@ logBtn.addEventListener('click', async () => {
 function updateGauges(data) {
     // Coolant temperature
     const coolantElem = document.getElementById('coolantTemp');
-    if (data.coolant_temp !== null) {
+    if (data.coolant_temp !== null && data.coolant_temp !== undefined) {
         coolantElem.textContent = data.coolant_temp.toFixed(1);
         updateGaugeAlert(coolantElem.parentElement, data.coolant_temp, 90, 100);
     }
     
     // Oil temperature
     const oilTempElem = document.getElementById('oilTemp');
-    if (data.oil_temp !== null) {
+    if (data.oil_temp !== null && data.oil_temp !== undefined) {
         oilTempElem.textContent = data.oil_temp.toFixed(1);
         updateGaugeAlert(oilTempElem.parentElement, data.oil_temp, 110, 120);
     }
     
     // Oil pressure
     const oilPressureElem = document.getElementById('oilPressure');
-    if (data.oil_pressure !== null) {
+    if (data.oil_pressure !== null && data.oil_pressure !== undefined) {
         oilPressureElem.textContent = data.oil_pressure.toFixed(1);
     }
     
     // Throttle position
     const throttleElem = document.getElementById('throttle');
-    if (data.throttle_position !== null) {
+    if (data.throttle_position !== null && data.throttle_position !== undefined) {
         throttleElem.textContent = data.throttle_position.toFixed(0);
     }
 }
@@ -149,8 +172,8 @@ function updateButtonStates() {
 function addLog(message, type = 'info') {
     const timestamp = new Date().toLocaleTimeString();
     const logMsg = document.createElement('div');
-    logMsg.className = `log-message ${type}`;
-    logMsg.textContent = `[${timestamp}] ${message}`;
+    logMsg.className = `log-entry ${type}`;
+    logMsg.innerHTML = `<span class="log-timestamp">${timestamp}</span><span class="log-message">${message}</span>`;
     logMessages.appendChild(logMsg);
     logMessages.scrollTop = logMessages.scrollHeight;
 }
@@ -166,6 +189,7 @@ async function apiCall(endpoint, method, data = null) {
         
         const result = await response.json();
         
+        // Handle success
         if (result.success) {
             if (endpoint.includes('connect')) {
                 systemStatus.connected = true;
@@ -175,11 +199,17 @@ async function apiCall(endpoint, method, data = null) {
                 systemStatus.streaming = false;
                 updateUI();
             }
+        } else {
+            // Handle API error responses (400, etc.)
+            if (result.message) {
+                addLog(result.message, 'error');
+            }
         }
         
         return result;
     } catch (error) {
         addLog(`API Error: ${error.message}`, 'error');
         console.error(error);
+        return { success: false, message: error.message };
     }
 }

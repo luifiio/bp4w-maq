@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MX5 Data Acquisition System</title>
+    <title>bpw4 dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -11,7 +11,7 @@
 <body>
     <div class="container">
         <header>
-            <h1>bp4w</h1>
+            <h1>bp4w dashboard</h1>
             <div class="status-indicator">
                 <span class="status-dot" id="connectionStatus"></span>
                 <span id="statusText">Disconnected</span>
@@ -20,10 +20,10 @@
 
         <!-- Control Panel -->
         <section class="controls">
-            <button id="connectBtn" class="btn btn-primary">Connect</button>
-            <button id="startBtn" class="btn btn-success" disabled>Start</button>
-            <button id="stopBtn" class="btn btn-danger" disabled>Stop</button>
-            <button id="logBtn" class="btn btn-secondary" disabled>Start Logging</button>
+            <button id="connectBtn">Connect</button>
+            <button id="startBtn" disabled>Start</button>
+            <button id="stopBtn" disabled>Stop</button>
+            <button id="logBtn" disabled>Start Logging</button>
         </section>
 
         <!-- Current Values -->
@@ -56,21 +56,28 @@
         <!-- Charts -->
         <section class="charts">
             <div class="chart-container">
+                <h2>Temperature</h2>
                 <canvas id="tempChart"></canvas>
             </div>
             <div class="chart-container">
+                <h2>Oil Pressure</h2>
                 <canvas id="pressureChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h2>Throttle Position</h2>
+                <canvas id="throttleChart"></canvas>
             </div>
         </section>
 
-        <!-- Log Messages -->
+        <!-- Logs -->
         <section class="log">
             <h3>System Log</h3>
-            <div id="logMessages" class="log-messages"></div>
+            <div id="logMessages" class="log-container"></div>
         </section>
     </div>
 
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="{{ url_for('static', filename='js/chart.js') }}"></script>
     <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/charts.js') }}"></script>
 </body>
 </html>
