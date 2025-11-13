@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MX5 Data Acquisition System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>bp4w</h1>
+            <div class="status-indicator">
+                <span class="status-dot" id="connectionStatus"></span>
+                <span id="statusText">Disconnected</span>
+            </div>
+        </header>
+
+        <!-- Control Panel -->
+        <section class="controls">
+            <button id="connectBtn" class="btn btn-primary">Connect</button>
+            <button id="startBtn" class="btn btn-success" disabled>Start</button>
+            <button id="stopBtn" class="btn btn-danger" disabled>Stop</button>
+            <button id="logBtn" class="btn btn-secondary" disabled>Start Logging</button>
+        </section>
+
+        <!-- Current Values -->
+        <section class="gauges">
+            <div class="gauge-card">
+                <div class="gauge-label">Coolant Temp</div>
+                <div class="gauge-value" id="coolantTemp">--</div>
+                <div class="gauge-unit">°C</div>
+            </div>
+            
+            <div class="gauge-card">
+                <div class="gauge-label">Oil Temp</div>
+                <div class="gauge-value" id="oilTemp">--</div>
+                <div class="gauge-unit">°C</div>
+            </div>
+            
+            <div class="gauge-card">
+                <div class="gauge-label">Oil Pressure</div>
+                <div class="gauge-value" id="oilPressure">--</div>
+                <div class="gauge-unit">PSI</div>
+            </div>
+            
+            <div class="gauge-card">
+                <div class="gauge-label">Throttle</div>
+                <div class="gauge-value" id="throttle">--</div>
+                <div class="gauge-unit">%</div>
+            </div>
+        </section>
+
+        <!-- Charts -->
+        <section class="charts">
+            <div class="chart-container">
+                <canvas id="tempChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <canvas id="pressureChart"></canvas>
+            </div>
+        </section>
+
+        <!-- Log Messages -->
+        <section class="log">
+            <h3>System Log</h3>
+            <div id="logMessages" class="log-messages"></div>
+        </section>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+</body>
+</html>
